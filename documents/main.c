@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 //a
+=======
+//b
+>>>>>>> feature_phuc
 #include <stdlib.h>
 #define LCD_SIZE_X 120
 #define LCD_SIZE_Y 80

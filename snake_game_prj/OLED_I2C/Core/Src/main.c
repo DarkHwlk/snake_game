@@ -23,6 +23,7 @@
 #include "tim.h"
 #include "gpio.h"
 #include "snake.h"
+#include "ssd1306.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -57,38 +58,36 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_GPIO_EXTI_Callback(int GPIO_Pin){
-	switch (GPIO_Pin)
-	{
-        case: //len
-            if(snake.direction != DOWN)
-            {
-                snake.direction = UP;
-            }
-            break;
-        case: //xuong
-            if(snake.direction != UP)
-            {
-                snake.direction = DOWN;
-            }
-            break;
-        case: //trai
-            if(snake.direction != RIGHT)
-            {
-                snake.direction = LEFT;
-            }
-            break;
-        case: //phai
-            if(snake.direction != LEFT)
-            {
-                snake.direction = RIGHT;
-            }
-            break;
-        case: //select
-            break;
-        case: //quit
-            break;
+int timer_flag;
+GameState game_state; 
+Snake snake;
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	if(htim->Instance == TIM3){
+		timer_flag = 1;
 	}
+}
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	//len
+				if((snake.direction != DOWN) && (GPIO_Pin = GPIO_PIN_1))
+				{
+						snake.direction = UP;
+				}
+	//xuong
+				if((snake.direction != UP) && (GPIO_Pin = GPIO_PIN_1))
+				{
+						snake.direction = DOWN;
+				}
+	//trai
+				if((snake.direction != RIGHT) && (GPIO_Pin = GPIO_PIN_1))
+				{
+						snake.direction = LEFT;
+				}
+	//phai
+				if((snake.direction != LEFT) && (GPIO_Pin = GPIO_PIN_1))
+				{
+						snake.direction = RIGHT;
+				}
 }
 /* USER CODE END 0 */
 
@@ -123,7 +122,10 @@ int main(void)
   MX_I2C2_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-
+	game_state = INGAME;
+	ssd1306_I2C_Init();
+	SSD1306_DrawFilledCircle(20, 20, 3, SSD1306_COLOR_WHITE);
+	SSD1306_UpdateScreen();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -133,6 +135,24 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		switch (game_state)
+		{
+			case INFORMATION:
+				information();
+				break;
+			case INGAME:
+					game_init();
+					break;
+			case SETTING:
+					setting();
+					break;
+			case GAMEOVER:
+					gameover();
+					break;
+			case MENU:
+					menu();
+					break;
+    }
   }
   /* USER CODE END 3 */
 }

@@ -22,6 +22,7 @@
 #include "i2c.h"
 #include "tim.h"
 #include "gpio.h"
+#include "snake.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -56,7 +57,39 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void HAL_GPIO_EXTI_Callback(int GPIO_Pin){
+	switch (GPIO_Pin)
+	{
+        case: //len
+            if(snake.direction != DOWN)
+            {
+                snake.direction = UP;
+            }
+            break;
+        case: //xuong
+            if(snake.direction != UP)
+            {
+                snake.direction = DOWN;
+            }
+            break;
+        case: //trai
+            if(snake.direction != RIGHT)
+            {
+                snake.direction = LEFT;
+            }
+            break;
+        case: //phai
+            if(snake.direction != LEFT)
+            {
+                snake.direction = RIGHT;
+            }
+            break;
+        case: //select
+            break;
+        case: //quit
+            break;
+	}
+}
 /* USER CODE END 0 */
 
 /**
